@@ -1,13 +1,22 @@
 
-
 import domain.BaseballNumber;
 import org.junit.Test;
 import service.NumberBaseball;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 public class NumberBaseballTest {
+
+    /*
+     * 1 ~ 2 정태용
+     * 3 ~ 4 강영균
+     * 5 ~ 7 김석호
+     * 8 ~ 10 배지훈
+     */
+
     // 정태용 구현 부분 시작점
     // 1. 객체에 입력값이 잘 들어가는지 확인(숫자 4개 생성 확인)
     @Test
@@ -108,4 +117,34 @@ public class NumberBaseballTest {
         numberBaseball.inputBaseballNum("NotNumberString");
     }
     // 김석호 구현 부분 끝
+
+    // 배지훈 구현 부분 시작점
+    // 8.inputBaseballNum함수에 1234 문자열을 인자 값으로 주고 실행하였는지 확인
+    @Test
+    public void checkDoInputBaseballNumParameterOneToFour() {
+        NumberBaseball numberBaseball = mock(NumberBaseball.class);
+        numberBaseball.inputBaseballNum("1234");
+        verify(numberBaseball, times(1)).inputBaseballNum("1234");
+    }
+
+    // 9.시도한 입력횟수를 확인하는 함수를 호출했는지 확인
+    @Test
+    public void checkDoTryCount() {
+        NumberBaseball numberBaseball =mock(NumberBaseball.class);
+        numberBaseball.inputBaseballNum("5432");
+        System.out.println(numberBaseball.tryNum());
+        numberBaseball.inputBaseballNum("6837");
+        System.out.println(numberBaseball.tryNum());
+        verify(numberBaseball, times(2)).tryNum();
+    }
+
+    // 10.정답을 이미 맞춘 경우 false를 제대로 반환하는지 확인
+    @Test
+    public void checkInputChanceLimit() {
+        NumberBaseball numberBaseball = new NumberBaseball();
+        String solutionNumber = numberBaseball.solutionNumber();
+        numberBaseball.inputBaseballNum(solutionNumber); // 정답입력
+        assertThat(numberBaseball.isCorrectAnswer(), is(true));
+    }
+    // 배지훈 구현 부분 끝
 }
