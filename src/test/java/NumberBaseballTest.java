@@ -1,3 +1,5 @@
+
+
 import domain.BaseballNumber;
 import org.junit.Test;
 import service.NumberBaseball;
@@ -20,16 +22,17 @@ public class NumberBaseballTest {
         NumberBaseball numberBaseball = new NumberBaseball();
         String checkNum = numberBaseball.solutionNumber();
         boolean checkRepetition = false;
-        for(int i = 0; i < checkNum.length() && !checkRepetition; ++i) {
-            for(int j = i+1; j < checkNum.length(); ++j) {
-                if(checkNum.charAt(i) == checkNum.charAt(j)) {
+        for (int i = 0; i < checkNum.length() && !checkRepetition; ++i) {
+            for (int j = i + 1; j < checkNum.length(); ++j) {
+                if (checkNum.charAt(i) == checkNum.charAt(j)) {
                     checkRepetition = true;
                     break;
                 }
             }
         }
-        assertThat(checkRepetition,  is(false));
+        assertThat(checkRepetition, is(false));
     }
+
     // 정태용 구현 부분 끝
     // 강영균 구현 부분 시작점
     // 3. 4개의 숫자를 입력하지 않은 경우 inputBaseballNum 함수에서 IndexOutOfBoundsException 발생시킴을 확인
@@ -46,7 +49,7 @@ public class NumberBaseballTest {
         StringBuilder stringBuilder = new StringBuilder();
         NumberBaseball numberBaseball = new NumberBaseball();
         String solution = numberBaseball.solutionNumber();
-        for(int i = 0; i < solution.length(); ++i)
+        for (int i = 0; i < solution.length(); ++i)
             stringBuilder.append(solution.charAt(i));
 
         String re = stringBuilder.toString();
@@ -54,5 +57,55 @@ public class NumberBaseballTest {
         BaseballNumber baseballNum = numberBaseball.getInputLog().get(0);
         assertThat(baseballNum.getStrike(), is(4));
     }
+
     // 강영균 구현 부분 끝
+    // 김석호 구현 부분 시작점
+    // 5. Ball값을 카운팅하는 함수가 제대로 작동하여 값이 올바르게 반환되는지 확인
+    @Test
+    public void checkingCorrectActionOfBall() {
+        StringBuilder stringBuilder = new StringBuilder();
+        NumberBaseball numberBaseball = new NumberBaseball();
+        String solution = numberBaseball.solutionNumber();
+
+        // Strike값이 4인 경우 Ball값이 0임을 확인
+        for (int i = 0; i < solution.length(); ++i)
+            stringBuilder.append(solution.charAt(i));
+
+        String re = stringBuilder.toString();
+        numberBaseball.inputBaseballNum(re);
+        BaseballNumber baseballNum = numberBaseball.getInputLog().get(0);
+        assertThat(baseballNum.getBall(), is(0));
+
+        stringBuilder.setLength(0); // StringBuilder 초기화
+
+        // 정답에 있는 숫자 4개가 모두 존재하나 위치가 모두 달라 Ball값이 4인 경우
+
+        for (int i = 1; i < solution.length(); ++i)
+            stringBuilder.append(solution.charAt(i));
+
+        stringBuilder.append(solution.charAt(0));
+        re = stringBuilder.toString();
+        numberBaseball.inputBaseballNum(re);
+        baseballNum = numberBaseball.getInputLog().get(1);
+        assertThat(baseballNum.getBall(), is(4));
+    }
+
+    // 6.SolutionNumber 실행시 반드시 1234를 반환하게하고 제대로 작동하는지 확인
+    @Test
+    public void whenDoSolutionNumberMustReturnOneToFour() {
+        NumberBaseball numberBaseball = mock(NumberBaseball.class);
+
+        when(numberBaseball.solutionNumber()).thenReturn("1234");
+        assertThat(numberBaseball.solutionNumber(), is("1234"));
+    }
+
+    // 7. NotNumberString 값을 inputBaseball함수의 인자 값으로 넣어주고 실행시 Exception 발생
+    @Test(expected = Exception.class)
+    public void ifSetNotNumberStringOccurException() {
+        NumberBaseball numberBaseball = mock(NumberBaseball.class);
+
+        doThrow(new Exception()).when(numberBaseball).inputBaseballNum(eq("NotNumberString"));
+        numberBaseball.inputBaseballNum("NotNumberString");
+    }
+    // 김석호 구현 부분 끝
 }
