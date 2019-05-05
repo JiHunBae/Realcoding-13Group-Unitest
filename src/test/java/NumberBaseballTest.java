@@ -55,3 +55,4 @@ public class NumberBaseballTest {
         assertThat(baseballNum.getStrike(), is(4));
     }
     // 강영균 구현 부분 끝
+}
